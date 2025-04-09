@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>돌봄 연결 관리</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<h2>👥 보호자 - 피보호자 연결</h2>
+
+<form th:action="@{/connect}" method="post">
+    <label>보호자 선택:</label>
+    <select name="caregiverId">
+        <option th:each="user : ${users}"
+                th:if="${user.role.name()} == '보호자'"
+                th:value="${user.id}"
+                th:text="${user.name}">보호자</option>
+    </select>
+
+    <label>피보호자 선택:</label>
+    <select name="protectedUserId">
+        <option th:each="user : ${users}"
+                th:if="${user.role.name()} == '피보호자'"
+                th:value="${user.id}"
+                th:text="${user.name}">피보호자</option>
+    </select>
+
+
+    <button type="submit">연결</button>
+</form>
+
+<hr/>
+
+<h3>👨‍👩‍👧‍👦 전체 사용자 목록</h3>
+<ul>
+    <li th:each="user : ${users}" th:text="${user.name + ' (' + user.role + ')'}"></li>
+</ul>
+</body>
+</html>
