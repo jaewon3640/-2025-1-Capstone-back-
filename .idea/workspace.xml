@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1205c417-385d-4004-8721-d17a47e16be9" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/demo/src/main/java/check.java" afterDir="false" />
+    <list default="true" id="1205c417-385d-4004-8721-d17a47e16be9" name="변경" comment="확인용">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +63,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Songjaol"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/jaewon3640/-2025-1-Capstone-back-.git",
+    "accountId": "c9e71bcc-d217-41ce-abd1-577e371fb208"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -77,6 +89,7 @@
     "Gradle.demo [:com.example.demo.DemoApplication.main()].executor": "Run",
     "Gradle.demo.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/USER/Desktop/프로젝트/demo/src/main/java/com/example/demo/DTO",
@@ -104,6 +117,27 @@
       <option name="presentableId" value="Default" />
       <updated>1744115250040</updated>
     </task>
+    <task id="LOCAL-00001" summary="확인용">
+      <option name="closed" value="true" />
+      <created>1744193492057</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1744193492057</updated>
+    </task>
+    <task id="LOCAL-00002" summary="확인용">
+      <option name="closed" value="true" />
+      <created>1744193547689</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744193547689</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="확인용" />
+    <option name="LAST_COMMIT_MESSAGE" value="확인용" />
   </component>
 </project>
