@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.DTO.HealthStatusRequest;
+import com.example.demo.DTO.HealthStatusResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.service.HealthStatusService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +19,12 @@ public class HealthStatusController {
     private final HealthStatusService healthStatusService;
 
     @PostMapping
-    public HealthStatus create(@RequestBody HealthStatus healthStatus) {
-        return healthStatusService.save(healthStatus);
+    public ResponseEntity<HealthStatusResponse> create(@RequestBody HealthStatusRequest request) {
+        return ResponseEntity.ok(healthStatusService.saveFromDto(request));
     }
 
     @GetMapping("/user/{userId}")
-    public List<HealthStatus> getByUser(@PathVariable Long userId) {
-        return healthStatusService.findByProtectedUserId(userId);
+    public List<HealthStatusResponse> getByUser(@PathVariable Long userId) {
+        return healthStatusService.getByUserId(userId);
     }
 }

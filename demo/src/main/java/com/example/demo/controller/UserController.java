@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.UserResponse;
 import com.example.demo.DTO.UserSignupRequest;
 import com.example.demo.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -17,23 +18,17 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.save(user);
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserSignupRequest request) {
+        return ResponseEntity.ok(userService.saveFromDto(request));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody UserSignupRequest request) {
-        User created = userService.signup(request);
-        return ResponseEntity.ok(created);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
-    @GetMapping("/check-email")
-    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
-        boolean isDuplicated = userService.isEmailDuplicated(email);
-        return ResponseEntity.ok(isDuplicated);
-    }
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.findAll();
+    public List<UserResponse> getAllUsers() {
+        return userService.getAll();
     }
 }

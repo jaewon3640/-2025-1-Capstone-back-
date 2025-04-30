@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.UserResponse;
 import com.example.demo.DTO.UserSignupRequest;
 import com.example.demo.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -14,26 +16,25 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User signup(UserSignupRequest request) {
+    public UserResponse saveFromDto(UserSignupRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .passward(request.getPassward())
-                .phone(request.getPhone())
                 .role(request.getRole())
                 .build();
 
-        return userRepository.save(user);
-    }
-    public boolean isEmailDuplicated(String email) {
-        return userRepository.existsByEmail(email);
+        return new UserResponse(userRepository.save(user));
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public UserResponse getById(Long id) {
+        return userRepository.findById(id)
+                .map(UserResponse::new)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> getAll() {
+        return userRepository.findAll().stream()
+                .map(UserResponse::new)
+                .collect(Collectors.toList());
     }
 }

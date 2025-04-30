@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface HealthStatusRepository extends JpaRepository<HealthStatus, Long> {
     List<HealthStatus> findByProtectedUserId(Long protectedUserId);
+    List<HealthStatus> findByUserId(Long UserId);
 }

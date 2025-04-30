@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.DTO.LocationRequest;
+import com.example.demo.DTO.LocationResponse;
 import com.example.demo.domain.Location;
 import com.example.demo.service.LocationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +19,12 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping
-    public Location create(@RequestBody Location location) {
-        return locationService.save(location);
+    public ResponseEntity<LocationResponse> create(@RequestBody LocationRequest request) {
+        return ResponseEntity.ok(locationService.saveFromDto(request));
     }
 
     @GetMapping("/user/{userId}")
-    public List<Location> getByUser(@PathVariable Long userId) {
-        return locationService.findByProtectedUserId(userId);
+    public List<LocationResponse> getByUser(@PathVariable Long userId) {
+        return locationService.getByUserId(userId);
     }
 }
