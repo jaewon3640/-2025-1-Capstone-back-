@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationRequest {
-    private Long protectedUserId;
+
     private double latitude;
     private double longitude;
     private String status;
     private LocalDateTime timestamp;
+    private Long protectedUserId;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.DTO;
 
+import com.example.demo.domain.HealthStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,4 +16,13 @@ public class HealthStatusResponse {
     private String measurement;
     private LocalDateTime recordedAt;
     private Long protectedUserId;
+
+    public HealthStatusResponse(HealthStatus status)
+    {
+        this.id=status.getId();
+        this.type=status.getType();
+        this.measurement=getMeasurement();
+        this.recordedAt=status.getRecordedAt();
+        this.protectedUserId=status.getProtectedUser().getId();
+    }
 }

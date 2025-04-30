@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleRequest {
-    private Long protectedUserId;
+
     private String title;
     private String description;
     private LocalDateTime scheduledAt;
+    private Long protectedUserId;
 }

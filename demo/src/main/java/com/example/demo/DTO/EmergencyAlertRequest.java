@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmergencyAlertRequest {
-    private Long protectedUserId;
+
     private String message;
     private LocalDateTime triggeredAt;
+    private Long protectedUserId;
 }

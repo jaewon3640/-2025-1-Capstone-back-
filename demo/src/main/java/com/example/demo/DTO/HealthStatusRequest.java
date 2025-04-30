@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HealthStatusRequest {
-    private Long protectedUserId;
+
     private String type;
     private String measurement;
     private LocalDateTime recordedAt;
+    private Long protectedUserId;
 }

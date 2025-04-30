@@ -11,4 +11,7 @@ import java.util.List;
 public interface CareRelationRepository extends JpaRepository<CareRelation, Long> {
     List<CareRelation> findByCaregiver(User caregiver);
     List<CareRelation> findByProtectedUser(User protectedUser);
+    List<CareRelation> findByProtectedUserId(Long protectedUserId);
+    List<CareRelation> findByCaregiverId(Long caregiverUserId);
+
 }

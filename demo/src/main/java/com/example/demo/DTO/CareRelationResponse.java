@@ -15,13 +15,11 @@ public class CareRelationResponse {
     private Long protectedUserId;
     private String protectedUserName;
 
-    public static CareRelationResponse from(CareRelation relation) {
-        return CareRelationResponse.builder()
-                .relationId(relation.getId())
-                .caregiverId(relation.getCaregiver().getId())
-                .caregiverName(relation.getCaregiver().getName())
-                .protectedUserId(relation.getProtectedUser().getId())
-                .protectedUserName(relation.getProtectedUser().getName())
-                .build();
+    public CareRelationResponse (CareRelation relation) {
+       this.relationId=relation.getId();
+       this.caregiverId=relation.getCaregiver().getId();
+       this.caregiverName=relation.getCaregiver().getName();
+       this.protectedUserId=relation.getProtectedUser().getId();
+       this.protectedUserName=relation.getProtectedUser().getName();
     }
 }

@@ -18,6 +18,7 @@ public class UserService {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
+                .passward(request.getPassward())
                 .phone(request.getPhone())
                 .role(request.getRole())
                 .build();

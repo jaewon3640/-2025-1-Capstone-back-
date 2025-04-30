@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.DTO.CareRelationRequest;
+import com.example.demo.DTO.CareRelationResponse;
 import com.example.demo.domain.CareRelation;
 import com.example.demo.domain.User;
 import com.example.demo.service.CareRelationService;
@@ -18,30 +20,22 @@ public class CareRelationController {
     private final CareRelationService careRelationService;
 
     @PostMapping("/connect")
-    public ResponseEntity<CareRelation> connect(
-            @RequestParam Long caregiverId,
-            @RequestParam Long protectedUserId) {
-        return ResponseEntity.ok(
-                careRelationService.connect(caregiverId, protectedUserId)
-        );
-    }
-    @PostMapping
-    public CareRelation create(@RequestBody CareRelation relation) {
-        return careRelationService.createRelation(relation);
+    public ResponseEntity<CareRelationResponse> connect(@RequestBody CareRelationRequest request) {
+        return ResponseEntity.ok(careRelationService.connectFromDto(request));
     }
 
+    @PostMapping
+    public ResponseEntity<CareRelationResponse> create(@RequestBody CareRelationRequest request) {
+        return ResponseEntity.ok(careRelationService.createRelationFromDto(request));
+    }
 
     @GetMapping("/caregiver/{caregiverId}")
-    public List<CareRelation> getByCaregiver(@PathVariable Long caregiverId) {
-        User caregiver = new User();
-        caregiver.setId(caregiverId);
-        return careRelationService.getByCaregiver(caregiver);
+    public List<CareRelationResponse> getByCaregiver(@PathVariable Long caregiverId) {
+        return careRelationService.getByCaregiverId(caregiverId);
     }
 
     @GetMapping("/protected/{protectedUserId}")
-    public List<CareRelation> getByProtectedUser(@PathVariable Long protectedUserId) {
-        User protectedUser = new User();
-        protectedUser.setId(protectedUserId);
-        return careRelationService.getByProtectedUser(protectedUser);
+    public List<CareRelationResponse> getByProtectedUser(@PathVariable Long protectedUserId) {
+        return careRelationService.getByProtectedUserId(protectedUserId);
     }
 }

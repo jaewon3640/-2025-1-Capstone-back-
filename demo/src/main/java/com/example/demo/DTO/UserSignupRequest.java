@@ -10,6 +10,7 @@ import lombok.*;
 public class UserSignupRequest {
     private String name;
     private String email;
+    private String passward;
     private String phone;
     private UserRole role;
 }
