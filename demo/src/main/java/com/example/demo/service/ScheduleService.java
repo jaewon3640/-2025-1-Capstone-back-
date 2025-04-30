@@ -42,7 +42,7 @@ public class ScheduleService {
     }
 
     public List<ScheduleResponse> getByUserId(Long userId) {
-        return scheduleRepository.findByUserId(userId).stream()
+        return scheduleRepository.findByProtectedUserId(userId).stream()
                 .map(ScheduleResponse::new)
                 .collect(Collectors.toList());
     }

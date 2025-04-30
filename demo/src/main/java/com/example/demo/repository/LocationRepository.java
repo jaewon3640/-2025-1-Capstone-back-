@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
     List<Location> findByProtectedUserId(Long protectedUserId);
-    List<Location> findByUserId(Long UserId);
+
 }

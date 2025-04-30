@@ -37,7 +37,7 @@ public class LocationService {
     }
 
     public List<LocationResponse> getByUserId(Long userId) {
-        return locationRepository.findByUserId(userId).stream()
+        return locationRepository.findByProtectedUserId(userId).stream()
                 .map(LocationResponse::new)
                 .collect(Collectors.toList());
     }

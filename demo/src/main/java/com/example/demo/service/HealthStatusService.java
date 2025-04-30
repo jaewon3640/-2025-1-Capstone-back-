@@ -33,8 +33,8 @@ public class HealthStatusService {
         return new HealthStatusResponse(healthStatusRepository.save(status));
     }
 
-    public List<HealthStatusResponse> getByUserId(Long userId) {
-        return healthStatusRepository.findByUserId(userId).stream()
+    public List<HealthStatusResponse> getByUserId(Long protectedUserId) {
+        return healthStatusRepository.findByProtectedUserId(protectedUserId).stream()
                 .map(HealthStatusResponse::new)
                 .collect(Collectors.toList());
     }
