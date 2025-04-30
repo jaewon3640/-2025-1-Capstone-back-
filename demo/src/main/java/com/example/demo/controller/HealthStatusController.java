@@ -23,8 +23,8 @@ public class HealthStatusController {
         return ResponseEntity.ok(healthStatusService.saveFromDto(request));
     }
 
-    @GetMapping("/user/{userId}")
-    public List<HealthStatusResponse> getByUser(@PathVariable Long userId) {
-        return healthStatusService.getByUserId(userId);
+    @GetMapping("/protected/{protectedUserId}")
+    public List<HealthStatusResponse> getByUser(@PathVariable Long protectedUserId) {
+        return healthStatusService.getByUserId(protectedUserId);
     }
 }

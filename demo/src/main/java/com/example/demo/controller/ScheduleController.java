@@ -23,9 +23,9 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.saveFromDto(request));
     }
 
-    @GetMapping("/user/{userId}")
-    public List<ScheduleResponse> getByUser(@PathVariable Long userId) {
-        return scheduleService.getByUserId(userId);
+    @GetMapping("/protected/{protectedUserId}")
+    public List<ScheduleResponse> getByUser(@PathVariable Long protectedUserId) {
+        return scheduleService.getByUserId(protectedUserId);
     }
 
     @PutMapping("/{scheduleId}/complete")
