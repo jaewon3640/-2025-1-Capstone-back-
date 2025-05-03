@@ -25,8 +25,9 @@ public class HealthStatusService {
                 .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
         HealthStatus status = HealthStatus.builder()
                 .protectedUser(protectedUser)
-                .type(request.getType())
-                .measurement(request.getMeasurement())
+                .checkBreakfast(request.isCheckBreakfast())
+                .checkMedicine(request.isCheckMedicine())
+                .mood(request.getMood())
                 .recordedAt(request.getRecordedAt())
                 .build();
 
