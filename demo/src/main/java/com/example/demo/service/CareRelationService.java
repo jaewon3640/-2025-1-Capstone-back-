@@ -5,6 +5,7 @@ import com.example.demo.DTO.CareRelationRequest;
 import com.example.demo.DTO.CareRelationResponse;
 import com.example.demo.domain.CareRelation;
 import com.example.demo.domain.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.CareRelationRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,9 @@ public class CareRelationService {
 
     public CareRelationResponse connectFromDto(CareRelationRequest request) {
         User caregiver = userRepository.findById(request.getCaregiverId())
-                .orElseThrow(() -> new RuntimeException("보호자 없음"));
+                .orElseThrow(() -> new UserNotFoundException("보호자 없음"));
         User protectedUser = userRepository.findById(request.getProtectedUserId())
-                .orElseThrow(() -> new RuntimeException("피보호자 없음"));
+                .orElseThrow(() -> new UserNotFoundException("피보호자 없음"));
 
         CareRelation relation = CareRelation.builder()
                 .caregiver(caregiver)
