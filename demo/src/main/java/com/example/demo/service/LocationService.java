@@ -6,6 +6,7 @@ import com.example.demo.DTO.LocationResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.domain.Location;
 import com.example.demo.domain.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.LocationRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class LocationService {
     public LocationResponse saveFromDto(LocationRequest request) {
 
         User protectedUser = userRepository.findById(request.getProtectedUserId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
         Location location = Location.builder()
                 .protectedUser(protectedUser)
                 .latitude(request.getLatitude())

@@ -6,6 +6,7 @@ import com.example.demo.DTO.ScheduleResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.domain.Schedule;
 import com.example.demo.domain.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.ScheduleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class ScheduleService {
 
     public ScheduleResponse saveFromDto(ScheduleRequest request) {
         User protectedUser = userRepository.findById(request.getProtectedUserId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         Schedule schedule = Schedule.builder()
                 .protectedUser(protectedUser)
@@ -36,7 +37,7 @@ public class ScheduleService {
     }
     public ScheduleResponse markAsComplete(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("일정이 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("일정이 존재하지 않습니다."));
         schedule.setCompleted(true);
         return new ScheduleResponse(scheduleRepository.save(schedule));
     }

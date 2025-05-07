@@ -5,6 +5,7 @@ import com.example.demo.DTO.HealthStatusRequest;
 import com.example.demo.DTO.HealthStatusResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.domain.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.HealthStatusRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +23,12 @@ public class HealthStatusService {
 
     public HealthStatusResponse saveFromDto(HealthStatusRequest request) {
         User protectedUser = userRepository.findById(request.getProtectedUserId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
         HealthStatus status = HealthStatus.builder()
                 .protectedUser(protectedUser)
-                .type(request.getType())
-                .measurement(request.getMeasurement())
+                .checkBreakfast(request.isCheckBreakfast())
+                .checkMedicine(request.isCheckMedicine())
+                .mood(request.getMood())
                 .recordedAt(request.getRecordedAt())
                 .build();
 

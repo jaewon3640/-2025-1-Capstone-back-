@@ -8,6 +8,7 @@ import com.example.demo.DTO.HealthStatusResponse;
 import com.example.demo.domain.EmergencyAlert;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.domain.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.EmergencyAlertRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class EmergencyAlertService {
 
     public EmergencyAlertResponse saveFromDto(EmergencyAlertRequest request) {
         User protectedUser = userRepository.findById(request.getProtectedUserId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         EmergencyAlert alert = EmergencyAlert.builder()
                 .protectedUser(protectedUser)
@@ -38,7 +39,7 @@ public class EmergencyAlertService {
 
     public EmergencyAlertResponse markAsResolved(Long alertId) {
         EmergencyAlert alert = emergencyAlertRepository.findById(alertId)
-                .orElseThrow(() -> new RuntimeException("해당 알림이 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 알림이 존재하지 않습니다."));
         alert.setResolved(true);
         return new EmergencyAlertResponse(emergencyAlertRepository.save(alert));
     }

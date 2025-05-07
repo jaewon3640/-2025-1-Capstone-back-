@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.DTO.UserResponse;
 import com.example.demo.DTO.UserSignupRequest;
 import com.example.demo.domain.User;
+import com.example.demo.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.demo.repository.UserRepository;
@@ -31,7 +32,7 @@ public class UserService {
     public UserResponse getById(Long id) {
         return userRepository.findById(id)
                 .map(UserResponse::new)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public List<UserResponse> getAll() {
