@@ -34,7 +34,19 @@ public class HealthStatusService {
 
         return new HealthStatusResponse(healthStatusRepository.save(status));
     }
+    public HealthStatusResponse markMedicineChecked(Long id) {
+        HealthStatus hs = healthStatusRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 건강 상태 없음"));
+        hs.setCheckMedicine(true);
+        return new HealthStatusResponse(healthStatusRepository.save(hs));
+    }
 
+    public HealthStatusResponse markBreakfastChecked(Long id) {
+        HealthStatus hs = healthStatusRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 건강 상태 없음"));
+        hs.setCheckBreakfast(true);
+        return new HealthStatusResponse(healthStatusRepository.save(hs));
+    }
     public List<HealthStatusResponse> getByUserId(Long protectedUserId) {
         return healthStatusRepository.findByProtectedUserId(protectedUserId).stream()
                 .map(HealthStatusResponse::new)
