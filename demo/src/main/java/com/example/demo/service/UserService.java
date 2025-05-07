@@ -21,6 +21,8 @@ public class UserService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .role(request.getRole())
+                .passward(request.getPassward())
+                .phone(request.getPhone())
                 .build();
 
         return new UserResponse(userRepository.save(user));
