@@ -22,7 +22,7 @@ public class UserService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .role(request.getRole())
-                .passward(request.getPassward())
+                .password(request.getPassword())
                 .phone(request.getPhone())
                 .build();
 

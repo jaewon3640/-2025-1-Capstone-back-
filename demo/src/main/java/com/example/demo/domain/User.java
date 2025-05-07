@@ -25,7 +25,7 @@ public class User {
 
     private String phone;
     private String email;
-    private String passward;
+    private String password;
 
     // 보호자가 관리하는 피보호자 목록
     @OneToMany(mappedBy = "caregiver")
