@@ -21,7 +21,6 @@ public class Location {
     private double longitude;
     private LocalDateTime timestamp;
 
-    private String status; // 예: 정상, 세이프존 이탈 등
 
     @ManyToOne
     @JoinColumn(name = "protected_user_id")
