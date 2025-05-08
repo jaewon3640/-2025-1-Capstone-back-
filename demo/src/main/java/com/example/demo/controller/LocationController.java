@@ -27,4 +27,9 @@ public class LocationController {
     public List<LocationResponse> getByUser(@PathVariable Long protectedUserId) {
         return locationService.getByUserId(protectedUserId);
     }
+    @GetMapping("/protected/{protectedUserId}/latest")
+    public LocationResponse getLatestLocation(@PathVariable Long protectedUserId) {
+        return locationService.getLatestByUser(protectedUserId);
+    }
+
 }
