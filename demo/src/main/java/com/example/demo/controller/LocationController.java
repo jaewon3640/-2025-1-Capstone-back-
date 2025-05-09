@@ -22,7 +22,7 @@ public class LocationController {
     public ResponseEntity<LocationResponse> create(@RequestBody LocationRequest request) {
         return ResponseEntity.ok(locationService.saveFromDto(request));
     }
-
+ 
     @GetMapping("/protected/{protectedUserId}")
     public List<LocationResponse> getByUser(@PathVariable Long protectedUserId) {
         return locationService.getByUserId(protectedUserId);
