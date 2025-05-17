@@ -3,7 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.DTO.HealthStatusRequest;
 import com.example.demo.DTO.HealthStatusResponse;
-import com.example.demo.DTO.ScheduleResponse;
+import com.example.demo.DTO.schedule.response.ScheduleResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.service.HealthStatusService;
 import lombok.RequiredArgsConstructor;

@@ -1,33 +1,33 @@
-package com.example.demo.domain;
+package com.example.demo.domain.schedule;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Table(name = "schedule")
 @Entity
-@Table(name = "schedules")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Schedule {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String description;
+    private Long protectedUserId;
 
-    private LocalDateTime scheduledAt;
+    private String title;
+
+    @Enumerated(EnumType.STRING)
+    private ScheduleType type;
+
+    private boolean recurring;
+
+    private LocalDateTime dateTime;
 
     private boolean completed;
-
-    @ManyToOne
-    @JoinColumn(name = "protected_user_id")
-    private User protectedUser;
 }
 
