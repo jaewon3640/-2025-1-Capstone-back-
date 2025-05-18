@@ -12,7 +12,6 @@ public class LocationRequest {
 
     private double latitude;
     private double longitude;
-    private String status;
     private LocalDateTime timestamp;
     private Long protectedUserId;
 }

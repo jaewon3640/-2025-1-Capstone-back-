@@ -31,7 +31,6 @@ public class LocationService {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .timestamp(request.getTimestamp())
-                .status(request.getStatus())
                 .build();
 
         return new LocationResponse(locationRepository.save(location));
@@ -41,5 +40,10 @@ public class LocationService {
         return locationRepository.findByProtectedUserId(userId).stream()
                 .map(LocationResponse::new)
                 .collect(Collectors.toList());
+    }
+    public LocationResponse getLatestByUser(Long userId) {
+        Location location = locationRepository.findTopByProtectedUserIdOrderByTimestampDesc(userId)
+                .orElseThrow(() -> new RuntimeException("위치 정보가 없습니다."));
+        return new LocationResponse(location);
     }
 }
