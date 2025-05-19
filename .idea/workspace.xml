@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1205c417-385d-4004-8721-d17a47e16be9" name="변경" comment="확인용">
-      <change afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/config/WebConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/DTO/MoodUpdateRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/LocationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/testdb.mv.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/DTO/EmergencyAlertResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/DTO/EmergencyAlertResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/config/FirebaseConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/HealthStatusController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/HealthStatusController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/HealthStatusService.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/HealthStatusService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,18 +90,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.demo [:com.example.demo.DemoApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.demo.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/USER/Desktop/프로젝트/demo/src/main/java/com/example/demo/DTO&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.demo [:com.example.demo.DemoApplication.main()].executor": "Run",
+    "Gradle.demo 빌드.executor": "Run",
+    "Gradle.demo.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/USER/Desktop/프로젝트/demo/src/main/java/com/example/demo/DTO",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "애플리케이션.DemoApplication.executor": "Run"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\USER\Desktop\프로젝트\demo\src\main\java\com\example\demo\DTO" />
@@ -113,7 +119,7 @@
   <component name="RunManager">
     <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.demo.DemoApplication" />
-      <module name="-2025-1-Capstone-back-.demo.main" />
+      <module name="demo.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.demo.*" />
@@ -126,7 +132,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.DemoApplication" />
+        <item itemvalue="애플리케이션.DemoApplication" />
       </list>
     </recent_temporary>
   </component>

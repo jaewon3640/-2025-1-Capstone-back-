@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.DTO.HealthStatusRequest;
 import com.example.demo.DTO.HealthStatusResponse;
+import com.example.demo.DTO.MoodUpdateRequest;
 import com.example.demo.DTO.schedule.response.ScheduleResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.service.HealthStatusService;
@@ -37,5 +38,13 @@ public class HealthStatusController {
     @PutMapping("/health-status/{id}/check-breakfast")
     public ResponseEntity<HealthStatusResponse> checkBreakfast(@PathVariable Long id) {
         return ResponseEntity.ok(healthStatusService.markBreakfastChecked(id));
+    }
+
+    @PutMapping("/health-status/{id}/mood")
+    public ResponseEntity<HealthStatusResponse> updateMoodStatus(
+            @PathVariable Long id,
+            @RequestBody MoodUpdateRequest request
+    ) {
+        return ResponseEntity.ok(healthStatusService.updateMood(id, request.getMood()));
     }
 }
