@@ -3,6 +3,7 @@ package com.example.demo.service;
 
 import com.example.demo.DTO.HealthStatusRequest;
 import com.example.demo.DTO.HealthStatusResponse;
+import com.example.demo.MoodStatus;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.domain.User;
 import com.example.demo.exception.UserNotFoundException;
@@ -51,5 +52,13 @@ public class HealthStatusService {
         return healthStatusRepository.findByProtectedUserId(protectedUserId).stream()
                 .map(HealthStatusResponse::new)
                 .collect(Collectors.toList());
+    }
+    public HealthStatusResponse updateMood(Long id, MoodStatus mood) {
+        HealthStatus hs = healthStatusRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 건강 상태 없음"));
+
+        hs.setMood(mood);
+
+        return new HealthStatusResponse(healthStatusRepository.save(hs));
     }
 }

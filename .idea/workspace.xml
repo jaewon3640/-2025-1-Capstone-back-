@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1205c417-385d-4004-8721-d17a47e16be9" name="변경" comment="건강상태 추가">
+    <list default="true" id="1205c417-385d-4004-8721-d17a47e16be9" name="변경" comment="확인용">
+      <change afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/DTO/MoodUpdateRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/testdb.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/testdb.mv.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/testdb.mv.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/DTO/EmergencyAlertResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/DTO/EmergencyAlertResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/config/FirebaseConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/ScheduleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/ScheduleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/HealthStatusController.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/controller/HealthStatusController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/HealthStatusService.java" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/main/java/com/example/demo/service/HealthStatusService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +78,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/jaewon3640/-2025-1-Capstone-back-.git&quot;,
-    &quot;accountId&quot;: &quot;c9e71bcc-d217-41ce-abd1-577e371fb208&quot;
+    &quot;accountId&quot;: &quot;4c713540-5ef1-4833-8c2f-58f73014699e&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -87,21 +90,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.demo [:com.example.demo.DemoApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.demo.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/USER/Desktop/프로젝트/demo/src/main/java/com/example/demo/DTO&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;프로젝트&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.demo [:com.example.demo.DemoApplication.main()].executor": "Run",
+    "Gradle.demo 빌드.executor": "Run",
+    "Gradle.demo.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/USER/Desktop/프로젝트/demo/src/main/java/com/example/demo/DTO",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "애플리케이션.DemoApplication.executor": "Run"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\USER\Desktop\프로젝트\demo\src\main\java\com\example\demo\DTO" />
@@ -113,6 +115,26 @@
       <recent name="C:\Users\USER\Desktop\프로젝트\demo\src\main\java\com\example\demo\controller" />
       <recent name="C:\Users\USER\Desktop\프로젝트\demo\src\main\java\com\example\demo\domain" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.DemoApplication" />
+      <module name="demo.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="애플리케이션.DemoApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -149,59 +171,17 @@
     </task>
     <task id="LOCAL-00004" summary="확인용">
       <option name="closed" value="true" />
-      <created>1744274038777</created>
+      <created>1746630827410</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1744274038777</updated>
+      <updated>1746630827410</updated>
     </task>
-    <task id="LOCAL-00005" summary="삭제">
-      <option name="closed" value="true" />
-      <created>1744274099266</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1744274099266</updated>
-    </task>
-    <task id="LOCAL-00006" summary="컨트롤러 모두 dto받기 완료">
-      <option name="closed" value="true" />
-      <created>1745977438671</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1745977438671</updated>
-    </task>
-    <task id="LOCAL-00007" summary="컨트롤러 모두 dto받기 완료">
-      <option name="closed" value="true" />
-      <created>1745978470244</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1745978470244</updated>
-    </task>
-    <task id="LOCAL-00008" summary="컨트롤러 모두 dto받기 완료">
-      <option name="closed" value="true" />
-      <created>1745994767736</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1745994767736</updated>
-    </task>
-    <task id="LOCAL-00009" summary="컨트롤러 모두 dto받기 완료">
-      <option name="closed" value="true" />
-      <created>1746604477291</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1746604477291</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="확인용" />
-    <MESSAGE value="삭제" />
-    <MESSAGE value="컨트롤러 모두 dto받기 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="컨트롤러 모두 dto받기 완료" />
+    <option name="LAST_COMMIT_MESSAGE" value="확인용" />
   </component>
 </project>
