@@ -1,9 +1,7 @@
 package com.example.demo.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.UserRole;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -14,9 +12,15 @@ import lombok.*;
 @Builder
 @Entity
 public class FcmToken {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long numId;
-    private String userId;
+    private Long id;
+
+    private Long userId;  // User DB의 id
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     private String token;
 }

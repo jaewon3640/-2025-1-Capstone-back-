@@ -9,12 +9,12 @@ import lombok.*;
 @Setter
 @ToString
 public class FcmTokenResponse {
-    private Long numId;
-    private String userId;
+    private Long id;
+    private Long userId;  // User DB의 id
     private String token;
 
     public FcmTokenResponse(FcmToken token) {
-        this.numId = token.getNumId();
+        this.id = token.getId();
         this.userId = token.getUserId();
         this.token = token.getToken();
     }

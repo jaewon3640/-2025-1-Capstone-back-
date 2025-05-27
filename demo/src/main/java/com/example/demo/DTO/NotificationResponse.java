@@ -1,7 +1,11 @@
 package com.example.demo.DTO;
 
+import com.example.demo.UserRole;
 import com.example.demo.domain.Notification;
+import com.example.demo.domain.schedule.ScheduleType;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -9,15 +13,26 @@ import lombok.*;
 @Setter
 @ToString
 public class NotificationResponse {
-    private Long numId;
-    private String userId;
+    private Long id;
+    private Long userId;   // User DB의 id
+
     private String title;
-    private String body;
+    private ScheduleType type;
+    private LocalDateTime notifiedAt;
+    private boolean sent;
 
     public NotificationResponse(Notification msg) {
-        this.numId = msg.getNumId();
-        this.userId = msg.getUserId();
+        this.id = msg.getId();
+        if (msg.getRole() == UserRole.보호자) {
+            this.userId = msg.getCaregiverId();
+        }
+        else {
+            this.userId = msg.getProtectedUserId();
+        }
+
         this.title = msg.getTitle();
-        this.body = msg.getBody();
+        this.type = msg.getType();
+        this.notifiedAt = msg.getNotifiedAt();
+        this.sent = msg.isSent();
     }
 }

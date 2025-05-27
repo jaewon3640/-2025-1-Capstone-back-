@@ -1,6 +1,9 @@
 package com.example.demo.DTO;
 
+import com.example.demo.domain.schedule.ScheduleType;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -8,8 +11,10 @@ import lombok.*;
 @Setter
 @ToString
 public class NotificationRequest {
-    private Long numId;
-    private String userId;
+    private Long id;
+    private Long userId;   // User DB의 id
+
     private String title;
-    private String body;
+    private ScheduleType type;
+    private LocalDateTime notifiedAt;
 }
