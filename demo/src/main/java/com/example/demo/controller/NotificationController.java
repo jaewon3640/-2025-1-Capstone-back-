@@ -29,7 +29,7 @@ public class NotificationController {
 
 
     @PostMapping
-    public ResponseEntity<NotificationResponse> createNotification(@RequestBody NotificationRequest request) throws FirebaseMessagingException {
+    public ResponseEntity<NotificationResponse> createNotification(@RequestBody NotificationRequest request) {
         return ResponseEntity.ok(notificationService.createNotification(request));
     }
 
