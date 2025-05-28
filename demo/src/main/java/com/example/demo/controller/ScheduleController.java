@@ -63,7 +63,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.getNonRecurringSchedulesByUser(protectedUserId));
     }
 
-    @GetMapping("/{protectedUserId}/{date}")
+    @GetMapping("/{protectedUserId}/date/{date}")
     public ResponseEntity<List<ScheduleResponse>> getSchedulesByDate(
             @PathVariable Long protectedUserId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
