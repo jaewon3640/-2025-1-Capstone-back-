@@ -43,7 +43,7 @@ public class LocationService {
     }
     public LocationResponse getLatestByUser(Long userId) {
         Location location = locationRepository.findTopByProtectedUserIdOrderByTimestampDesc(userId)
-                .orElseThrow(() -> new RuntimeException("위치 정보가 없습니다."));
+                .orElseThrow(() -> new LocationNotFoundException(userId));
         return new LocationResponse(location);
     }
 }
