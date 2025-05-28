@@ -50,7 +50,7 @@ public class ScheduleController {
     @PutMapping("complete/{id}")
     public ResponseEntity<Void> completeSchedule(@PathVariable Long id) {
         scheduleService.completedSchedule(id);
-        return ResponseEntity.noContent().build(); // 명확히 204 반환
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/recurring/{protectedUserId}")

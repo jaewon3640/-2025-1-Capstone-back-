@@ -9,6 +9,5 @@ import java.util.Optional;
 
 public interface RecurringScheduleRepository extends JpaRepository<RecurringSchedule, Long> {
     List<RecurringSchedule> findByProtectedUserId(Long protectedUserId);
-    Optional<RecurringSchedule> findByProtectedUserIdAndTitle(Long protectedUserId, String title);
     void deleteByProtectedUserIdAndTitle(Long protectedUserId, String title);
 }

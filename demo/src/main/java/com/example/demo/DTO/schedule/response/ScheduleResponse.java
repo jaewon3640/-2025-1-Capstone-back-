@@ -7,8 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ScheduleResponse {
+    private Long id;
     private String title;
     private ScheduleType type;
-    private String time;      // "오전 08시 00분"
+    private String time;
     private boolean completed;
 }
