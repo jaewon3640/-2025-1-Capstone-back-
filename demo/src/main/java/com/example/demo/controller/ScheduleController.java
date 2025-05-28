@@ -25,14 +25,17 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping("/recurring")
-    public void saveRecurring(@RequestBody RecurringScheduleRequest request) {
+    public ResponseEntity<Void> saveRecurring(@RequestBody RecurringScheduleRequest request) {
         scheduleService.saveRecurring(request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/nonRecurring")
-    public void saveNonRecurring(@RequestBody NonRecurringScheduleRequest request) {
+    public ResponseEntity<Void> saveNonRecurring(@RequestBody NonRecurringScheduleRequest request) {
         scheduleService.saveNonRecurring(request);
+        return ResponseEntity.noContent().build();
     }
+
 
     @GetMapping("/{protectedUserId}/{type}")
     public ResponseEntity<List<String>> getTitlesByType(
@@ -45,8 +48,9 @@ public class ScheduleController {
 
     //스케줄 id로 받을 수 있으면
     @PutMapping("complete/{id}")
-    public void completeSchedule(@PathVariable Long id) {
+    public ResponseEntity<Void> completeSchedule(@PathVariable Long id) {
         scheduleService.completedSchedule(id);
+        return ResponseEntity.noContent().build(); // 명확히 204 반환
     }
 
     @GetMapping("/recurring/{protectedUserId}")
