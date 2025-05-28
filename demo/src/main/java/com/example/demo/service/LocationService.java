@@ -6,6 +6,7 @@ import com.example.demo.DTO.LocationResponse;
 import com.example.demo.domain.HealthStatus;
 import com.example.demo.domain.Location;
 import com.example.demo.domain.User;
+import com.example.demo.exception.LocationNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.LocationRepository;
 import com.example.demo.repository.UserRepository;
