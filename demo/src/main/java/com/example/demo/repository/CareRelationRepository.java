@@ -14,4 +14,7 @@ public interface CareRelationRepository extends JpaRepository<CareRelation, Long
     List<CareRelation> findByProtectedUserId(Long protectedUserId);
     List<CareRelation> findByCaregiverId(Long caregiverUserId);
 
+    void deleteByCaregiverIdAndProtectedUserId(Long caregiverId, Long protectedUserId);
+
+    boolean existsByCaregiverIdAndProtectedUserId(Long id, Long id1);
 }
