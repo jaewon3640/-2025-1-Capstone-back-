@@ -27,12 +27,13 @@ public class LocationService {
 
         User protectedUser = userRepository.findById(request.getProtectedUserId())
                 .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
-        Location location = Location.builder()
-                .protectedUser(protectedUser)
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
-                .timestamp(request.getTimestamp())
-                .build();
+        Location location = locationRepository.findTopByProtectedUserIdOrderByTimestampDesc(request.getProtectedUserId())
+                .orElse(Location.builder().protectedUser(protectedUser).build()); // 없으면 새로 생성
+
+
+        location.setLatitude(request.getLatitude());
+        location.setLongitude(request.getLongitude());
+        location.setTimestamp(request.getTimestamp());
 
         return new LocationResponse(locationRepository.save(location));
     }

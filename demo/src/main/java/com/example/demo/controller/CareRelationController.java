@@ -38,4 +38,13 @@ public class CareRelationController {
     public List<CareRelationResponse> getByProtectedUser(@PathVariable Long protectedUserId) {
         return careRelationService.getByProtectedUserId(protectedUserId);
     }
+
+    @DeleteMapping("/{caregiverId}/{protectedUserId}")
+    public ResponseEntity<Void> deleteRelation(
+            @PathVariable Long caregiverId,
+            @PathVariable Long protectedUserId) {
+        careRelationService.deleteByCaregiverAndProtectedUser(caregiverId, protectedUserId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -18,7 +18,7 @@ public class LocationController {
 
     private final LocationService locationService;
 
-    @PostMapping
+    @PutMapping
     public ResponseEntity<LocationResponse> create(@RequestBody LocationRequest request) {
         return ResponseEntity.ok(locationService.saveFromDto(request));
     }
