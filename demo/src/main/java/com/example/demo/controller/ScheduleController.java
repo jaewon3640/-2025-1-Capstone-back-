@@ -50,7 +50,7 @@ public class ScheduleController {
     @PutMapping("complete/{id}")
     public ResponseEntity<Void> completeSchedule(@PathVariable Long id) {
         scheduleService.completedSchedule(id);
-        return ResponseEntity.noContent().build(); // 명확히 204 반환
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/recurring/{protectedUserId}")
@@ -63,7 +63,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.getNonRecurringSchedulesByUser(protectedUserId));
     }
 
-    @GetMapping("/{protectedUserId}/{date}")
+    @GetMapping("/{protectedUserId}/date/{date}")
     public ResponseEntity<List<ScheduleResponse>> getSchedulesByDate(
             @PathVariable Long protectedUserId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date

@@ -10,12 +10,9 @@ import com.example.demo.repository.CareRelationRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
-
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +26,14 @@ public class CareRelationService {
                 .orElseThrow(() -> new UserNotFoundException("보호자 없음"));
         User protectedUser = userRepository.findById(request.getProtectedUserId())
                 .orElseThrow(() -> new UserNotFoundException("피보호자 없음"));
+
+        // 중복 관계 검사
+        boolean exists = careRelationRepository.existsByCaregiverIdAndProtectedUserId(
+                caregiver.getId(), protectedUser.getId());
+
+        if (exists) {
+            throw new IllegalStateException("이미 존재하는 보호자-피보호자 관계입니다.");
+        }
 
         CareRelation relation = CareRelation.builder()
                 .caregiver(caregiver)
@@ -54,4 +59,8 @@ public class CareRelationService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteByCaregiverAndProtectedUser(Long caregiverId, Long protectedUserId) {
+        careRelationRepository.deleteByCaregiverIdAndProtectedUserId(caregiverId, protectedUserId);
+    }
 }

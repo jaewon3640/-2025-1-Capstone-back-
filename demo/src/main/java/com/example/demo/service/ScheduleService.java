@@ -10,6 +10,7 @@ import com.example.demo.DTO.schedule.response.TodayScheduleResponse;
 import com.example.demo.domain.schedule.RecurringSchedule;
 import com.example.demo.domain.schedule.Schedule;
 import com.example.demo.domain.schedule.ScheduleType;
+import com.example.demo.exception.ExistsSameScheduleException;
 import com.example.demo.exception.ScheduleNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.RecurringScheduleRepository;
@@ -176,6 +177,7 @@ public class ScheduleService {
 
         return schedules.stream()
                 .map(s -> new ScheduleResponse(
+                        s.getId(),
                         s.getTitle(),
                         s.getType(),
                         formatTimeToKorean(s.getDateTime().toLocalTime()),
@@ -205,11 +207,11 @@ public class ScheduleService {
     }
 
     private void existsSameSchedule(Long protectedUserId, String title) {
-        boolean exists = recurringScheduleRepository
+        boolean exists = scheduleRepository
                 .findByProtectedUserIdAndTitle(protectedUserId, title)
                 .isPresent();
         if (exists) {
-            throw new IllegalArgumentException("이미 같은 제목의 정기 일정이 존재합니다: " + title);
+            throw new ExistsSameScheduleException("이미 같은 제목의 일정이 존재합니다: " + title);
         }
     }
 
