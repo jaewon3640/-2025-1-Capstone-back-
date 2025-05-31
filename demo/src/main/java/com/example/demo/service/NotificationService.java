@@ -3,10 +3,14 @@ package com.example.demo.service;
 import com.example.demo.DTO.NotificationRequest;
 import com.example.demo.DTO.NotificationResponse;
 import com.example.demo.UserRole;
+import com.example.demo.domain.FcmToken;
 import com.example.demo.domain.Notification;
 import com.example.demo.domain.User;
 import com.example.demo.domain.schedule.Schedule;
 import com.example.demo.domain.schedule.ScheduleType;
+import com.example.demo.exception.FcmTokenNotFoundException;
+import com.example.demo.exception.NotificationNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.FcmTokenRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.UserRepository;
@@ -29,14 +33,16 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final FcmTokenRepository fcmTokenRepository;
     private final UserRepository userRepository;
-    private final NotificationScheduler notificationScheduler;
+    private final ProtectedUserNotificationService protectedUserNotificationService;
+    private final CaregiverNotificationService caregiverNotificationService;
 
     public void saveRecurringNotifications(List<Schedule> schedules) {
         schedules.forEach(schedule -> {
             if (schedule.getDateTime().isAfter(LocalDateTime.now())) {
-                notificationScheduler.saveUpcomingScheduleNotification(schedule);
+                protectedUserNotificationService.saveUpcomingScheduleNotification(schedule);
                 if (schedule.getType() == ScheduleType.MEDICINE) {
-                    notificationScheduler.setMissedScheduleNotification(schedule);
+                    protectedUserNotificationService.saveScheduleCompletedCheckNotification(schedule);
+                    caregiverNotificationService.setMissedScheduleNotification(schedule);
                 }
             }
         });
@@ -44,7 +50,7 @@ public class NotificationService {
 
     public void saveNonRecurringNotification(Schedule schedule) {
         if (!userRepository.existsById(schedule.getProtectedUserId())) {
-            throw new RuntimeException("해당 사용자가 존재하지 않습니다.");
+            throw new UserNotFoundException("해당 사용자가 존재하지 않습니다.");
         }
         if (isDuplicateNotification(schedule)) {
             throw new RuntimeException("이미 동일한 알림이 설정되어 있습니다.");
@@ -53,9 +59,10 @@ public class NotificationService {
             throw new RuntimeException("과거 시간으로 알림을 설정할 수 없습니다.");
         }
 
-        notificationScheduler.saveUpcomingScheduleNotification(schedule);
+        protectedUserNotificationService.saveUpcomingScheduleNotification(schedule);
         if (schedule.getType() == ScheduleType.MEDICINE) {
-            notificationScheduler.setMissedScheduleNotification(schedule);
+            protectedUserNotificationService.saveScheduleCompletedCheckNotification(schedule);
+            caregiverNotificationService.setMissedScheduleNotification(schedule);
         }
     }
 
@@ -65,10 +72,28 @@ public class NotificationService {
                 schedule.getType(), schedule.getDateTime());
     }
 
-    public List<NotificationResponse> readAllNotifications(Long userId) {
+    @Transactional
+    public void updateNotificationsByUserId(FcmToken fcmToken) {
+        log.info(fcmToken.toString());
+        List<Notification> msgList;
+        if (fcmToken.getRole() == UserRole.보호자) {
+            msgList = notificationRepository.findByCaregiverId(fcmToken.getUserId());
+        }
+        else {
+            msgList = notificationRepository
+                    .findByProtectedUserIdAndRole(fcmToken.getUserId(), UserRole.피보호자);
+        }
+        if (msgList.isEmpty()) {
+            throw new NotificationNotFoundException("알림이 존재하지 않습니다.");
+        }
+        msgList.forEach(msg -> msg.setToken(fcmToken.getToken()));
+        notificationRepository.saveAll(msgList);
+    }
+
+    public List<NotificationResponse> readUserNotifications(Long userId) {
         log.info("userId = {}", userId);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         List<NotificationResponse> msgList;
         if (user.getRole() == UserRole.보호자) {
@@ -82,14 +107,14 @@ public class NotificationService {
                     .toList();
         }
         if (msgList.isEmpty()) {
-            throw new RuntimeException("알림이 존재하지 않습니다.");
+            throw new NotificationNotFoundException("알림이 존재하지 않습니다.");
         }
         return msgList;
     }
 
     public NotificationResponse readNotification(Long id) {
         Notification msg = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 알림이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
         return new NotificationResponse(msg);
     }
 
@@ -98,7 +123,7 @@ public class NotificationService {
         log.info(schedule.toString());
         List<Notification> msgList = notificationRepository.findByScheduleId(schedule.getId());
         if (msgList.isEmpty()) {
-            throw new RuntimeException("알림이 존재하지 않습니다.");
+            throw new NotificationNotFoundException("알림이 존재하지 않습니다.");
         }
         log.info("current message: {}", msgList.get(0));
         msgList.forEach(msg -> setNotification(msg, schedule));
@@ -137,13 +162,13 @@ public class NotificationService {
     public NotificationResponse createNotification(NotificationRequest request) {
         log.info(request.toString());
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
         UserRole role = user.getRole();
         if (isDuplicateNotification(request, role)) {
             throw new RuntimeException("이미 동일한 알림이 설정되어 있습니다.");
         }
         String userToken = fcmTokenRepository.findByUserId(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("해당 사용자의 토큰이 존재하지 않습니다."))
+                .orElseThrow(() -> new FcmTokenNotFoundException("해당 사용자의 토큰이 존재하지 않습니다."))
                 .getToken();
 
         Notification msg = Notification.builder()
@@ -186,7 +211,7 @@ public class NotificationService {
     public NotificationResponse updateNotification(Long id, NotificationRequest request) {
         log.info(request.toString());
         Notification msg = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 알림이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
         log.info("current msg: {}", msg);
         setNotification(msg, request);
         log.info("changed msg: {}", msg);
@@ -212,14 +237,14 @@ public class NotificationService {
     @Transactional
     public NotificationResponse deleteNotificationById(Long id) {
         Notification msg = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 알림이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
         notificationRepository.delete(msg);
         return new NotificationResponse(msg);
     }
 
     public NotificationResponse sendNotification(Long id) throws FirebaseMessagingException {
         Notification msg = notificationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 알림이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
         log.info(msg.toString());
         String registrationToken = msg.getToken();
         String title = (msg.getType() == ScheduleType.MEDICINE)
