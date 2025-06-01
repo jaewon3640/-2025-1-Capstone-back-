@@ -24,4 +24,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByCaregiverId(Long userId);
     List<Notification> findByProtectedUserId(Long userId);
     List<Notification> findByProtectedUserIdAndRole(Long userId, UserRole userRole);
+    List<Notification> findBySentAndNotifiedAtAfter(boolean sent, LocalDateTime now);
 }

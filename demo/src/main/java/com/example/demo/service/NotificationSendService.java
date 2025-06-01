@@ -55,7 +55,7 @@ public class NotificationSendService {
                         .setTitle(title)
                         .setBody(body)
                         .build())
-                .putData("msgType", "healthStatusCheck")
+                .putData("type", "EMOTION_CHECK")
                 .addAllTokens(registrationTokens)
                 .build();
 
@@ -67,7 +67,7 @@ public class NotificationSendService {
     }
 
     // 일정 시작 전 알림(피보호자)
-    public void sendUpcomingScheduleNotification(Notification msg) throws FirebaseMessagingException {
+    public void sendNotification(Notification msg) throws FirebaseMessagingException {
         Message message = Message.builder()
                 .setNotification(com.google.firebase.messaging.Notification.builder()
                         .setTitle(msg.getMsgTitle())
@@ -91,10 +91,10 @@ public class NotificationSendService {
                         .setTitle(msg.getMsgTitle())
                         .setBody(msg.getBody())
                         .build())
-                .putData("msgType", "completedCheck")
+                .putData("type", "TODAY_CHECK")
                 .putData("scheduleId", msg.getScheduleId().toString())
                 .putData("time", time)
-                .putData("body", msg.getBody())
+                .putData("message", msg.getBody())
                 .setToken(msg.getToken())
                 .build();
 

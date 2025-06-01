@@ -14,15 +14,16 @@ import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.FcmTokenRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.UserRepository;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
@@ -35,6 +36,34 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final ProtectedUserNotificationService protectedUserNotificationService;
     private final CaregiverNotificationService caregiverNotificationService;
+    private final NotificationSendService notificationSendService;
+    private final TaskScheduler taskScheduler;
+
+    @PostConstruct
+    public void init() {
+        List<Notification> msgList = notificationRepository
+                .findBySentAndNotifiedAtAfter(false, LocalDateTime.now());
+        if (!msgList.isEmpty()) {
+            msgList.forEach(msg -> {
+                LocalDateTime dateTime = msg.getNotifiedAt();
+                log.info("schedule: {}", msg);
+                if (msg.getRole() == UserRole.보호자) {
+                    taskScheduler.schedule(
+                            () -> caregiverNotificationService.notifyMissedSchedule(msg),
+                            dateTime.atZone(ZoneId.systemDefault()).toInstant());
+                }
+                else {
+                    taskScheduler.schedule(() -> {
+                        try {
+                            notificationSendService.sendNotification(msg);
+                        } catch (FirebaseMessagingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+                }
+            });
+        }
+    }
 
     public void saveRecurringNotifications(List<Schedule> schedules) {
         schedules.forEach(schedule -> {
@@ -42,7 +71,7 @@ public class NotificationService {
                 protectedUserNotificationService.saveUpcomingScheduleNotification(schedule);
                 if (schedule.getType() == ScheduleType.MEDICINE) {
                     protectedUserNotificationService.saveScheduleCompletedCheckNotification(schedule);
-                    caregiverNotificationService.setMissedScheduleNotification(schedule);
+                    caregiverNotificationService.saveMissedScheduleNotifications(schedule);
                 }
             }
         });
@@ -62,7 +91,7 @@ public class NotificationService {
         protectedUserNotificationService.saveUpcomingScheduleNotification(schedule);
         if (schedule.getType() == ScheduleType.MEDICINE) {
             protectedUserNotificationService.saveScheduleCompletedCheckNotification(schedule);
-            caregiverNotificationService.setMissedScheduleNotification(schedule);
+            caregiverNotificationService.saveMissedScheduleNotifications(schedule);
         }
     }
 
@@ -246,9 +275,10 @@ public class NotificationService {
         Notification msg = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
         log.info(msg.toString());
-        String registrationToken = msg.getToken();
+
         String title = (msg.getType() == ScheduleType.MEDICINE)
                 ? msg.getTitle() + " 복용 알림" : msg.getTitle() + " 방문 알림";
+        msg.setMsgTitle(title);
 
         int hour = msg.getNotifiedAt().getHour();
         int minute = msg.getNotifiedAt().getMinute();
@@ -257,19 +287,11 @@ public class NotificationService {
         if (hour > 12) hour -= 12;
 
         String body = String.format("오늘 %s %02d시 %02d분에 %s%s", day, hour, minute, msg.getTitle(),
-                (msg.getType() == ScheduleType.MEDICINE) ? "(을/를) 복용하셔야 합니다." : " 방문 일정이 있습니다.");
+                (msg.getType() == ScheduleType.MEDICINE) ? "을(를) 복용하셔야 합니다." : " 방문 일정이 있습니다.");
+        msg.setBody(body);
         log.info("title: {}, body: {}", title, body);
 
-        Message message = Message.builder()
-                .setNotification(com.google.firebase.messaging.Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
-                        .build())
-                .setToken(registrationToken)
-                .build();
-
-        String response = FirebaseMessaging.getInstance().send(message);
-        log.info("Successfully sent message: {}", response);
+        notificationSendService.sendNotification(msg);
         return new NotificationResponse(msg);
     }
 }

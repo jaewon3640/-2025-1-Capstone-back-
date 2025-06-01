@@ -54,6 +54,10 @@ public class ProtectedUserNotificationService {
                 .orElseThrow(() -> new FcmTokenNotFoundException("해당 사용자의 토큰이 존재하지 않습니다."))
                 .getToken();
 
+        LocalDateTime dateTime = (schedule.getType() == ScheduleType.MEDICINE)
+                ? schedule.getDateTime().minusMinutes(10)
+                : schedule.getDateTime().minusHours(1);
+
         Notification msg = Notification.builder()
                 .role(UserRole.피보호자)
                 .protectedUserId(schedule.getProtectedUserId())
@@ -61,21 +65,21 @@ public class ProtectedUserNotificationService {
                 .scheduleId(schedule.getId())
                 .title(schedule.getTitle())
                 .type(schedule.getType())
-                .notifiedAt(schedule.getDateTime())
+                .notifiedAt(dateTime)
                 .sent(false)
                 .build();
 
-        String msgTitle = (msg.getType() == ScheduleType.MEDICINE)
-                ? msg.getTitle() + " 복용 전 알림" : msg.getTitle() + " 방문 전 알림";
+        String msgTitle = (schedule.getType() == ScheduleType.MEDICINE)
+                ? schedule.getTitle() + " 복용 전 알림" : schedule.getTitle() + " 방문 전 알림";
 
-        int hour = msg.getNotifiedAt().getHour();
-        int minute = msg.getNotifiedAt().getMinute();
+        int hour = schedule.getDateTime().getHour();
+        int minute = schedule.getDateTime().getMinute();
         String day = (hour < 12) ? "오전" : "오후";
         if (hour == 0) hour = 12;
         if (hour > 12) hour -= 12;
 
-        String body = String.format("오늘 %s %02d시 %02d분에 %s%s", day, hour, minute, msg.getTitle(),
-                (msg.getType() == ScheduleType.MEDICINE) ? "(을/를) 복용하셔야 합니다." : " 방문 일정이 있습니다.");
+        String body = String.format("오늘 %s %02d시 %02d분에 %s%s", day, hour, minute, schedule.getTitle(),
+                (schedule.getType() == ScheduleType.MEDICINE) ? "을(를) 복용하셔야 합니다." : " 방문 일정이 있습니다.");
         log.info("title: {}, body: {}", msgTitle, body);
 
         msg = msg.toBuilder()
@@ -88,12 +92,10 @@ public class ProtectedUserNotificationService {
     }
 
     public void setUpcomingScheduleNotification(Notification msg) {
-        LocalDateTime dateTime = (msg.getType() == ScheduleType.MEDICINE)
-                ? msg.getNotifiedAt().minusMinutes(10)
-                : msg.getNotifiedAt().minusHours(1);
+        LocalDateTime dateTime = msg.getNotifiedAt();
         taskScheduler.schedule(() -> {
             try {
-                notificationSendService.sendUpcomingScheduleNotification(msg);
+                notificationSendService.sendNotification(msg);
             } catch (FirebaseMessagingException e) {
                 throw new RuntimeException(e);
             }
@@ -119,16 +121,16 @@ public class ProtectedUserNotificationService {
                 .sent(false)
                 .build();
 
-        String msgTitle = msg.getTitle() + " 복용 알림";
+        String msgTitle = schedule.getTitle() + " 복용 알림";
 
-        int hour = msg.getNotifiedAt().getHour();
-        int minute = msg.getNotifiedAt().getMinute();
+        int hour = schedule.getDateTime().getHour();
+        int minute = schedule.getDateTime().getMinute();
         String day = (hour < 12) ? "오전" : "오후";
         if (hour == 0) hour = 12;
         if (hour > 12) hour -= 12;
 
         String time = String.format("%s %02d : %02d", day, hour, minute);
-        String body = String.format("오늘 %s(을/를) 복용하실 시간입니다.", msg.getTitle());
+        String body = String.format("오늘 %s을(를) 복용하실 시간입니다.", schedule.getTitle());
         log.info("time: {}, body: {}", time, body);
 
         msg = msg.toBuilder()
