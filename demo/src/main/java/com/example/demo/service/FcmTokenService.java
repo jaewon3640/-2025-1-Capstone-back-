@@ -28,11 +28,15 @@ public class FcmTokenService {
         if (fcmTokenRepository.existsByUserId(userId)) {
            FcmToken fcmToken = fcmTokenRepository.findByUserId(userId)
                     .orElseThrow(() -> new FcmTokenNotFoundException("해당 사용자의 토큰이 존재하지 않습니다."));
-            log.info("current token: {}", fcmToken.getToken());
-            fcmToken.setToken(request.getToken());
-            log.info("changed token: {}", fcmToken.getToken());
-            notificationService.updateNotificationsByUserId(fcmToken);
-            return new FcmTokenResponse(fcmTokenRepository.save(fcmToken));
+           if (!(request.getToken()).equals(fcmToken.getToken())) {
+               log.info("current token: {}", fcmToken.getToken());
+               fcmToken.setToken(request.getToken());
+               log.info("changed token: {}", fcmToken.getToken());
+               notificationService.updateNotificationsByUserId(fcmToken);
+               return new FcmTokenResponse(fcmTokenRepository.save(fcmToken));
+           }
+           log.info(fcmToken.toString());
+           return new FcmTokenResponse(fcmToken);
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
