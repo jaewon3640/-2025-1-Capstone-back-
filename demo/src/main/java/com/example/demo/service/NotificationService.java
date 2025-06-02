@@ -112,11 +112,11 @@ public class NotificationService {
             msgList = notificationRepository
                     .findByProtectedUserIdAndRole(fcmToken.getUserId(), UserRole.피보호자);
         }
-        if (msgList.isEmpty()) {
-            throw new NotificationNotFoundException("알림이 존재하지 않습니다.");
+
+        if (!msgList.isEmpty()) {
+            msgList.forEach(msg -> msg.setToken(fcmToken.getToken()));
+            notificationRepository.saveAll(msgList);
         }
-        msgList.forEach(msg -> msg.setToken(fcmToken.getToken()));
-        notificationRepository.saveAll(msgList);
     }
 
     public List<NotificationResponse> readUserNotifications(Long userId) {
