@@ -38,15 +38,15 @@ public class CaregiverNotificationService {
 
     // 보호자 알림
 
-    // 1. 건강 상태 확인 알림: 피보호자가 건강 상태 입력 완료하면 전송(해당 보호자 기기)
+    // 1. 오늘의 기분 확인 알림: 피보호자가 오늘의 기분 입력하면 전송(해당 보호자 기기)
     public void notifyHealthStatusCompleted(Long protectedUserId) throws FirebaseMessagingException {
         User protectedUser = userRepository.findById(protectedUserId)
                 .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         List<String> caregiverTokens = getCaregiverTokens(protectedUserId);
-        String body = protectedUser.getName() + "님이 오늘의 건강 상태를 입력하셨습니다.";
+        String body = protectedUser.getName() + "님이 오늘의 기분을 입력하셨습니다.";
         log.info("body: {}", body);
-        notificationSendService.sendHealthStatusCompletedNotifications(caregiverTokens, "건강 상태 확인 알림", body);
+        notificationSendService.sendHealthStatusCompletedNotifications(caregiverTokens, "오늘의 기분 확인 알림", body);
     }
 
     private List<String> getCaregiverTokens(Long protectedUserId) {

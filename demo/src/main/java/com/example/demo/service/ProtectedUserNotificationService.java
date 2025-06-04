@@ -32,8 +32,8 @@ public class ProtectedUserNotificationService {
 
     // 피보호자 알림
 
-    // 1. 건강 상태 입력 알림: 매일 오후 8시에 전송(모든 피보호자 기기)
-    // 알림 유형(msgType)도 전송
+    // 1. 오늘의 기분 입력 알림: 매일 오후 8시에 전송(모든 피보호자 기기)
+    // 알림 유형(type)도 전송
     @Scheduled(cron = "0 0 20 * * *")
     public void notifyHealthStatusCheck() throws FirebaseMessagingException {
         List<String> protectedUserTokens = fcmTokenRepository.findByRole(UserRole.피보호자).stream()
@@ -44,7 +44,7 @@ public class ProtectedUserNotificationService {
         }
 
         notificationSendService.sendHealthStatusCheckNotifications(protectedUserTokens,
-                "건강 상태 알림", "오늘의 건강 상태를 입력해주세요.");
+                "오늘의 기분 입력 알림", "오늘의 기분을 입력해주세요.");
     }
 
     // 2. 일정 시작 전 알림: 설정된 시간 10분(약 복용) / 1시간(병원) 전에 전송(해당 피보호자 기기)
@@ -103,7 +103,7 @@ public class ProtectedUserNotificationService {
     }
 
     // 3. 약 복용 일정 완료 확인 알림: 설정된 시간에 전송(해당 피보호자 기기)
-    // 알림 유형(msgType), scheduleId, body, 일정 시간(time)도 전송
+    // 알림 유형(type), scheduleId, 알림 내용(message), 일정 시간(time)도 전송
     @Transactional
     public void saveScheduleCompletedCheckNotification(Schedule schedule) {
         String protectedUserToken = fcmTokenRepository.findByUserId(schedule.getProtectedUserId())
