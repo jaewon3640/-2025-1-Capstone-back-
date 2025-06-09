@@ -41,7 +41,7 @@ public class NotificationSendService {
         log.info("Failed to send messages: {}", failedTokens);
     }
 
-    // 건강 상태 입력 알림(피보호자)
+    // 오늘의 기분 입력 알림(피보호자)
     public void sendHealthStatusCheckNotifications(
             List<String> registrationTokens, String title, String body) throws FirebaseMessagingException {
 
@@ -104,7 +104,7 @@ public class NotificationSendService {
         updateSent(msg);
     }
 
-    // 건강 상태 확인 알림(보호자)
+    // 오늘의 기분 확인 알림(보호자)
     public void sendHealthStatusCompletedNotifications(
             List<String> registrationTokens, String title, String body) throws FirebaseMessagingException {
 
