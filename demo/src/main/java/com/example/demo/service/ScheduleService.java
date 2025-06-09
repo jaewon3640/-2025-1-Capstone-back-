@@ -36,6 +36,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final RecurringScheduleRepository recurringScheduleRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public void saveRecurring(RecurringScheduleRequest request) {
@@ -80,6 +81,8 @@ public class ScheduleService {
         }
 
         scheduleRepository.saveAll(schedules);
+
+        notificationService.saveRecurringNotifications(schedules);
     }
 
     private String mapDayOfWeekToKorean(DayOfWeek dayOfWeek) {
@@ -110,6 +113,8 @@ public class ScheduleService {
                 .build();
 
         scheduleRepository.save(schedule);
+
+        notificationService.saveNonRecurringNotification(schedule);
     }
 
     public List<RecurringScheduleResponse> getRecurringSchedulesByUser(Long protectedUserId) {
@@ -188,6 +193,9 @@ public class ScheduleService {
 
     @Transactional
     public void deleteScheduleByTitle(Long protectedUserId, String title) {
+        notificationService.deleteNotifications(
+                scheduleRepository.findByTitleAndProtectedUserId(title, protectedUserId));
+
         scheduleRepository.deleteByProtectedUserIdAndTitle(protectedUserId, title);
         recurringScheduleRepository.deleteByProtectedUserIdAndTitle(protectedUserId, title);
     }

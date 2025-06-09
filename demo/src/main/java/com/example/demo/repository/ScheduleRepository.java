@@ -21,4 +21,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     Optional<Schedule> findByProtectedUserIdAndTitle(Long protectedUserId, String title);
 
+    List<Schedule> findByTitleAndProtectedUserId(String title, Long protectedUserId);
 }

@@ -9,6 +9,7 @@ import com.example.demo.domain.User;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.HealthStatusRepository;
 import com.example.demo.repository.UserRepository;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class HealthStatusService {
 
     private final HealthStatusRepository healthStatusRepository;
     private final UserRepository userRepository;
+    private final CaregiverNotificationService caregiverNotificationService;
 
     public HealthStatusResponse saveFromDto(HealthStatusRequest request) {
         User protectedUser = userRepository.findById(request.getProtectedUserId())
@@ -32,6 +34,12 @@ public class HealthStatusService {
                 .mood(request.getMood())
                 .recordedAt(request.getRecordedAt())
                 .build();
+
+        try {
+            caregiverNotificationService.notifyHealthStatusCompleted(request.getProtectedUserId());
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
 
         return new HealthStatusResponse(healthStatusRepository.save(status));
     }

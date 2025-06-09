@@ -8,6 +8,7 @@ import com.example.demo.domain.User;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.HealthStatusRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.CaregiverNotificationService;
 import com.example.demo.service.HealthStatusService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,13 @@ class HealthStatusServiceTest {
     private HealthStatusRepository healthStatusRepository;
     private UserRepository userRepository;
     private HealthStatusService healthStatusService;
+    private CaregiverNotificationService caregiverNotificationService;
 
     @BeforeEach
     void setUp() {
         healthStatusRepository = mock(HealthStatusRepository.class);
         userRepository = mock(UserRepository.class);
-        healthStatusService = new HealthStatusService(healthStatusRepository, userRepository);
+        healthStatusService = new HealthStatusService(healthStatusRepository, userRepository, caregiverNotificationService);
     }
 
     @Test
