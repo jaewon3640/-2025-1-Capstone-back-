@@ -34,15 +34,23 @@ public class ProtectedUserNotificationService {
     // 알림 유형(type)도 전송
     @Scheduled(cron = "0 0 20 * * *")
     public void notifyHealthStatusCheck() throws FirebaseMessagingException {
-        List<String> protectedUserTokens = fcmTokenRepository.findByRole(UserRole.피보호자).stream()
-                .map(FcmToken::getToken)
-                .toList();
-        if (protectedUserTokens.isEmpty()) {
-            throw new FcmTokenNotFoundException("피보호자 토큰이 존재하지 않습니다.");
+        List<FcmToken> protectedUserList = fcmTokenRepository.findByRole(UserRole.피보호자);
+        if (protectedUserList.isEmpty()) {
+            throw new FcmTokenNotFoundException("피보호자가 존재하지 않습니다.");
         }
 
-        notificationSendService.sendHealthStatusCheckNotifications(protectedUserTokens,
-                "오늘의 기분 입력 알림", "오늘의 기분을 입력해주세요.");
+        List<String> protectedUserTokens = protectedUserList.stream()
+                .map(FcmToken::getToken)
+                .toList();
+        List<Long> protectedUserIdList = protectedUserList.stream()
+                .map(FcmToken::getUserId)
+                .toList();
+
+        for (int i = 0; i < protectedUserList.size(); i++) {
+            notificationSendService.sendHealthStatusCheckNotifications(
+                    protectedUserTokens.get(i), protectedUserIdList.get(i),
+                    "오늘의 기분 입력 알림", "오늘의 기분을 입력해주세요.");
+        }
     }
 
     // 2. 일정 시작 전 알림: 설정된 시간 10분(약 복용) / 1시간(병원) 전에 전송(해당 피보호자 기기)

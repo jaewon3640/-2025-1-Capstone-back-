@@ -43,27 +43,21 @@ public class NotificationSendService {
 
     // 오늘의 기분 입력 알림(피보호자)
     public void sendHealthStatusCheckNotifications(
-            List<String> registrationTokens, String title, String body) throws FirebaseMessagingException {
+            String registrationToken, Long protectedUserId,
+            String title, String body) throws FirebaseMessagingException {
 
-        if (registrationTokens.isEmpty()) {
-            log.info("No tokens");
-            return;
-        }
-
-        MulticastMessage message = MulticastMessage.builder()
+        Message message = Message.builder()
                 .setNotification(com.google.firebase.messaging.Notification.builder()
                         .setTitle(title)
                         .setBody(body)
                         .build())
                 .putData("type", "EMOTION_CHECK")
-                .addAllTokens(registrationTokens)
+                .putData("protectedUserId", protectedUserId.toString())
+                .setToken(registrationToken)
                 .build();
 
-        BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
-
-        if (response.getFailureCount() > 0) {
-            checkFailure(response, registrationTokens);
-        }
+        String response = FirebaseMessaging.getInstance().send(message);
+        log.info(".Successfully sent message: {}", response);
     }
 
     // 일정 시작 전 알림(피보호자)
