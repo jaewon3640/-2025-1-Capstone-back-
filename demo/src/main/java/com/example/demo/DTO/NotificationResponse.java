@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class NotificationResponse {
     private Long id;
     private Long userId;   // User DB의 id

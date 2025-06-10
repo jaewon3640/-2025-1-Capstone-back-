@@ -13,7 +13,6 @@ import com.example.demo.repository.*;
 import com.google.firebase.messaging.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CaregiverNotificationService {
@@ -45,7 +43,6 @@ public class CaregiverNotificationService {
 
         List<String> caregiverTokens = getCaregiverTokens(protectedUserId);
         String body = protectedUser.getName() + "님이 오늘의 기분을 입력하셨습니다.";
-        log.info("body: {}", body);
         notificationSendService.sendHealthStatusCompletedNotifications(caregiverTokens, "오늘의 기분 확인 알림", body);
     }
 
@@ -61,11 +58,12 @@ public class CaregiverNotificationService {
 
         List<String> caregiverTokens = caregivers.stream()
                 .map(caregiverId -> fcmTokenRepository.findByUserId(caregiverId)
-                        .orElseThrow(() -> new FcmTokenNotFoundException("해당 사용자의 토큰이 존재하지 않습니다.")))
+                        .orElseThrow(() -> new FcmTokenNotFoundException(
+                                "해당 보호자(ID: " + caregiverId + ")의 토큰이 존재하지 않습니다.")))
                 .map(FcmToken::getToken)
                 .toList();
         if (caregiverTokens.isEmpty()) {
-            throw new FcmTokenNotFoundException("해당 사용자의 보호자 토큰이 존재하지 않습니다.");
+            throw new FcmTokenNotFoundException("보호자의 토큰이 존재하지 않습니다.");
         }
 
         return caregiverTokens;
@@ -89,11 +87,12 @@ public class CaregiverNotificationService {
 
         List<String> caregiverTokens = caregivers.stream()
                 .map(caregiverId -> fcmTokenRepository.findByUserId(caregiverId)
-                        .orElseThrow(() -> new FcmTokenNotFoundException("해당 사용자의 토큰이 존재하지 않습니다.")))
+                        .orElseThrow(() -> new FcmTokenNotFoundException(
+                                "해당 보호자(ID: " + caregiverId + ")의 토큰이 존재하지 않습니다.")))
                 .map(FcmToken::getToken)
                 .toList();
         if (caregiverTokens.isEmpty()) {
-            throw new FcmTokenNotFoundException("해당 사용자의 보호자 토큰이 존재하지 않습니다.");
+            throw new FcmTokenNotFoundException("보호자의 토큰이 존재하지 않습니다.");
         }
 
         LocalDateTime dateTime = schedule.getDateTime().plusMinutes(10);
@@ -118,7 +117,6 @@ public class CaregiverNotificationService {
 
         String body = String.format("%s님이 오늘 %s %02d시 %02d분에 %s을(를) 복용하지 않으셨습니다.",
                 protectedUser.getName(), day, hour, minute, schedule.getTitle());
-        log.info("title: {}, body: {}", msgTitle, body);
 
         List<Notification> msgList = new ArrayList<>();
         for (int i = 0; i < caregivers.size(); i++) {

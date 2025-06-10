@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class FcmTokenResponse {
     private Long id;
     private Long userId;  // User DB의 id

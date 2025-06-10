@@ -10,7 +10,6 @@ import com.example.demo.repository.*;
 import com.google.firebase.messaging.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ProtectedUserNotificationService {
@@ -80,7 +78,6 @@ public class ProtectedUserNotificationService {
 
         String body = String.format("오늘 %s %02d시 %02d분에 %s%s", day, hour, minute, schedule.getTitle(),
                 (schedule.getType() == ScheduleType.MEDICINE) ? "을(를) 복용하셔야 합니다." : " 방문 일정이 있습니다.");
-        log.info("title: {}, body: {}", msgTitle, body);
 
         msg = msg.toBuilder()
                 .msgTitle(msgTitle)
@@ -131,7 +128,6 @@ public class ProtectedUserNotificationService {
 
         String time = String.format("%s %02d : %02d", day, hour, minute);
         String body = String.format("오늘 %s을(를) 복용하실 시간입니다.", schedule.getTitle());
-        log.info("time: {}, body: {}", time, body);
 
         msg = msg.toBuilder()
                 .msgTitle(msgTitle)

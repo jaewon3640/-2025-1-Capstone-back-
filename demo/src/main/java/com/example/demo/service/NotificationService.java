@@ -17,7 +17,6 @@ import com.example.demo.repository.UserRepository;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class NotificationService {
@@ -46,7 +44,6 @@ public class NotificationService {
         if (!msgList.isEmpty()) {
             msgList.forEach(msg -> {
                 LocalDateTime dateTime = msg.getNotifiedAt();
-                log.info("schedule: {}", msg);
                 if (msg.getRole() == UserRole.보호자) {
                     taskScheduler.schedule(
                             () -> caregiverNotificationService.notifyMissedSchedule(msg),
@@ -102,8 +99,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void updateNotificationsByUserId(FcmToken fcmToken) {
-        log.info(fcmToken.toString());
+    public void updateNotificationTokens(FcmToken fcmToken) {
         List<Notification> msgList;
         if (fcmToken.getRole() == UserRole.보호자) {
             msgList = notificationRepository.findByCaregiverId(fcmToken.getUserId());
@@ -120,7 +116,6 @@ public class NotificationService {
     }
 
     public List<NotificationResponse> readUserNotifications(Long userId) {
-        log.info("userId = {}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
 
@@ -149,15 +144,11 @@ public class NotificationService {
 
     @Transactional
     public void updateNotifications(Schedule schedule) {
-        log.info(schedule.toString());
         List<Notification> msgList = notificationRepository.findByScheduleId(schedule.getId());
-        if (msgList.isEmpty()) {
-            throw new NotificationNotFoundException("알림이 존재하지 않습니다.");
+        if (!msgList.isEmpty()) {
+            msgList.forEach(msg -> setNotification(msg, schedule));
+            notificationRepository.saveAll(msgList);
         }
-        log.info("current message: {}", msgList.get(0));
-        msgList.forEach(msg -> setNotification(msg, schedule));
-        log.info("changed message: {}", msgList.get(0));
-        notificationRepository.saveAll(msgList);
     }
 
     private void setNotification(Notification msg, Schedule schedule) {
@@ -189,7 +180,6 @@ public class NotificationService {
 
     @Transactional
     public NotificationResponse createNotification(NotificationRequest request) {
-        log.info(request.toString());
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
         UserRole role = user.getRole();
@@ -238,12 +228,9 @@ public class NotificationService {
 
     @Transactional
     public NotificationResponse updateNotification(Long id, NotificationRequest request) {
-        log.info(request.toString());
         Notification msg = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
-        log.info("current msg: {}", msg);
         setNotification(msg, request);
-        log.info("changed msg: {}", msg);
         return new NotificationResponse(notificationRepository.save(msg));
     }
 
@@ -274,7 +261,6 @@ public class NotificationService {
     public NotificationResponse sendNotification(Long id) throws FirebaseMessagingException {
         Notification msg = notificationRepository.findById(id)
                 .orElseThrow(() -> new NotificationNotFoundException("해당 알림이 존재하지 않습니다."));
-        log.info(msg.toString());
 
         String title = (msg.getType() == ScheduleType.MEDICINE)
                 ? msg.getTitle() + " 복용 알림" : msg.getTitle() + " 방문 알림";
@@ -289,7 +275,6 @@ public class NotificationService {
         String body = String.format("오늘 %s %02d시 %02d분에 %s%s", day, hour, minute, msg.getTitle(),
                 (msg.getType() == ScheduleType.MEDICINE) ? "을(를) 복용하셔야 합니다." : " 방문 일정이 있습니다.");
         msg.setBody(body);
-        log.info("title: {}, body: {}", title, body);
 
         notificationSendService.sendNotification(msg);
         return new NotificationResponse(msg);

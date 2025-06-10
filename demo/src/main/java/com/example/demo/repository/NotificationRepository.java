@@ -11,18 +11,18 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
+    List<Notification> findBySentAndNotifiedAtAfter(boolean sent, LocalDateTime now);
+    List<Notification> findByCaregiverId(Long userId);
+    List<Notification> findByProtectedUserIdAndRole(Long userId, UserRole userRole);
+    List<Notification> findByProtectedUserId(Long userId);
     List<Notification> findByScheduleId(Long scheduleId);
+
     boolean existsByScheduleIdAndTitleAndTypeAndNotifiedAt(
             Long id, String title, ScheduleType type, LocalDateTime dateTime);
-    void deleteByScheduleId(Long ScheduleId);
-
     boolean existsByCaregiverIdAndTitleAndTypeAndNotifiedAt(
             Long userId, String title, ScheduleType type, LocalDateTime notifiedAt);
     boolean existsByProtectedUserIdAndTitleAndTypeAndNotifiedAt(
             Long userId, String title, ScheduleType type, LocalDateTime notifiedAt);
 
-    List<Notification> findByCaregiverId(Long userId);
-    List<Notification> findByProtectedUserId(Long userId);
-    List<Notification> findByProtectedUserIdAndRole(Long userId, UserRole userRole);
-    List<Notification> findBySentAndNotifiedAtAfter(boolean sent, LocalDateTime now);
+    void deleteByScheduleId(Long scheduleId);
 }
