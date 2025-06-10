@@ -31,7 +31,7 @@ public class ProtectedUserNotificationService {
     // 피보호자 알림
 
     // 1. 오늘의 기분 입력 알림: 매일 오후 8시에 전송(모든 피보호자 기기)
-    // 알림 유형(type)도 전송
+    // 알림 유형(type), 피보호자 id(protectedUserId)도 전송
     @Scheduled(cron = "0 0 20 * * *")
     public void notifyHealthStatusCheck() throws FirebaseMessagingException {
         List<FcmToken> protectedUserList = fcmTokenRepository.findByRole(UserRole.피보호자);
