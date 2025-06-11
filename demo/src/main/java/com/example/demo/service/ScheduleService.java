@@ -215,10 +215,8 @@ public class ScheduleService {
     }
 
     private void existsSameSchedule(Long protectedUserId, String title) {
-        boolean exists = scheduleRepository
-                .findByProtectedUserIdAndTitle(protectedUserId, title)
-                .isPresent();
-        if (exists) {
+        List<Schedule> schedules = scheduleRepository.findByProtectedUserIdAndTitle(protectedUserId, title);
+        if (!schedules.isEmpty()) {
             throw new ExistsSameScheduleException("이미 같은 제목의 일정이 존재합니다: " + title);
         }
     }

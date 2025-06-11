@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByProtectedUserId(Long protectedUserId);
@@ -19,7 +18,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query("SELECT DISTINCT s.title FROM Schedule s WHERE s.protectedUserId = :protectedUserId AND s.type = :type")
     List<String> findDistinctTitleByProtectedUserIdAndType(Long protectedUserId, ScheduleType type);
 
-    Optional<Schedule> findByProtectedUserIdAndTitle(Long protectedUserId, String title);
+    List<Schedule> findByProtectedUserIdAndTitle(Long protectedUserId, String title);
 
     List<Schedule> findByTitleAndProtectedUserId(String title, Long protectedUserId);
 }
