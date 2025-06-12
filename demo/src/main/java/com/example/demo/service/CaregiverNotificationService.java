@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +33,7 @@ public class CaregiverNotificationService {
     private final ScheduleRepository scheduleRepository;
     private final NotificationSendService notificationSendService;
     private final TaskScheduler taskScheduler;
+    private final ScheduledTaskService scheduledTaskService;
 
 
     // 보호자 알림
@@ -141,8 +143,9 @@ public class CaregiverNotificationService {
 
     public void setMissedScheduleNotification(List<Notification> msgList) {
         LocalDateTime dateTime = msgList.get(0).getNotifiedAt();
-        taskScheduler.schedule(() -> notifyMissedSchedule(msgList),
+        ScheduledFuture<?> future =  taskScheduler.schedule(() -> notifyMissedSchedule(msgList),
                 dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        msgList.forEach(msg -> scheduledTaskService.registerTask(msg.getId(), future));
     }
 
     public void notifyMissedSchedule(List<Notification> msgList) {
@@ -156,6 +159,8 @@ public class CaregiverNotificationService {
             }
         }
         else {
+            msgList.forEach(
+                    notification -> scheduledTaskService.cancelTask(notification.getId()));
             deleteMissedScheduleNotification(msgList);
         }
     }
@@ -180,6 +185,7 @@ public class CaregiverNotificationService {
             }
         }
         else {
+            scheduledTaskService.cancelTask(msg.getId());
             deleteMissedScheduleNotification(msg);
         }
     }

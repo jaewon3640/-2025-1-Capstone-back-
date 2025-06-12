@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 @RequiredArgsConstructor
 @Service
@@ -26,6 +27,7 @@ public class ProtectedUserNotificationService {
     private final FcmTokenRepository fcmTokenRepository;
     private final NotificationSendService notificationSendService;
     private final TaskScheduler taskScheduler;
+    private final ScheduledTaskService scheduledTaskService;
 
 
     // 피보호자 알림
@@ -39,16 +41,9 @@ public class ProtectedUserNotificationService {
             throw new FcmTokenNotFoundException("피보호자가 존재하지 않습니다.");
         }
 
-        List<String> protectedUserTokens = protectedUserList.stream()
-                .map(FcmToken::getToken)
-                .toList();
-        List<Long> protectedUserIdList = protectedUserList.stream()
-                .map(FcmToken::getUserId)
-                .toList();
-
-        for (int i = 0; i < protectedUserList.size(); i++) {
+        for (FcmToken fcmToken : protectedUserList) {
             notificationSendService.sendHealthStatusCheckNotifications(
-                    protectedUserTokens.get(i), protectedUserIdList.get(i),
+                    fcmToken.getToken(), fcmToken.getUserId(),
                     "오늘의 기분 입력 알림", "오늘의 기분을 입력해주세요.");
         }
     }
@@ -98,13 +93,14 @@ public class ProtectedUserNotificationService {
 
     public void setUpcomingScheduleNotification(Notification msg) {
         LocalDateTime dateTime = msg.getNotifiedAt();
-        taskScheduler.schedule(() -> {
+        ScheduledFuture<?> future = taskScheduler.schedule(() -> {
             try {
                 notificationSendService.sendNotification(msg);
             } catch (FirebaseMessagingException e) {
                 throw new RuntimeException(e);
             }
         }, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        scheduledTaskService.registerTask(msg.getId(), future);
     }
 
     // 3. 약 복용 일정 완료 확인 알림: 설정된 시간에 전송(해당 피보호자 기기)
@@ -148,12 +144,13 @@ public class ProtectedUserNotificationService {
 
     public void setScheduleCompletedCheckNotification(Notification msg, String time) {
         LocalDateTime dateTime = msg.getNotifiedAt();
-        taskScheduler.schedule(() -> {
+        ScheduledFuture<?> future = taskScheduler.schedule(() -> {
             try {
                 notificationSendService.sendScheduleCompletedCheckNotification(msg, time);
             } catch (FirebaseMessagingException e) {
                 throw new RuntimeException(e);
             }
         }, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        scheduledTaskService.registerTask(msg.getId(), future);
     }
 }

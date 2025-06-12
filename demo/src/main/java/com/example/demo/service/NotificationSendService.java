@@ -17,6 +17,7 @@ import java.util.List;
 public class NotificationSendService {
 
     private final NotificationRepository notificationRepository;
+    private final ScheduledTaskService scheduledTaskService;
 
     @Transactional
     private void updateSent(Notification msg) {
@@ -73,6 +74,7 @@ public class NotificationSendService {
         String response = FirebaseMessaging.getInstance().send(message);
         log.info("Successfully sent message: {}", response);
 
+        scheduledTaskService.cancelTask(msg.getId());
         updateSent(msg);
     }
 
@@ -95,6 +97,7 @@ public class NotificationSendService {
         String response = FirebaseMessaging.getInstance().send(message);
         log.info("Successfully sent message: {}.", response);
 
+        scheduledTaskService.cancelTask(msg.getId());
         updateSent(msg);
     }
 
@@ -103,7 +106,6 @@ public class NotificationSendService {
             List<String> registrationTokens, String title, String body) throws FirebaseMessagingException {
 
         if (registrationTokens.isEmpty()) {
-            log.info("No tokens.");
             return;
         }
 
@@ -141,6 +143,8 @@ public class NotificationSendService {
             checkFailure(response, registrationTokens);
         }
 
+        msgList.forEach(
+                notification -> scheduledTaskService.cancelTask(notification.getId()));
         updateSent(msgList);
     }
 }

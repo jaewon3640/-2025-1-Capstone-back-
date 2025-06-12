@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 @RequiredArgsConstructor
 @Service
@@ -36,6 +37,7 @@ public class NotificationService {
     private final CaregiverNotificationService caregiverNotificationService;
     private final NotificationSendService notificationSendService;
     private final TaskScheduler taskScheduler;
+    private final ScheduledTaskService scheduledTaskService;
 
     @PostConstruct
     public void init() {
@@ -44,19 +46,22 @@ public class NotificationService {
         if (!msgList.isEmpty()) {
             msgList.forEach(msg -> {
                 LocalDateTime dateTime = msg.getNotifiedAt();
+                ScheduledFuture<?> future;
                 if (msg.getRole() == UserRole.보호자) {
-                    taskScheduler.schedule(
+                    future = taskScheduler.schedule(
                             () -> caregiverNotificationService.notifyMissedSchedule(msg),
                             dateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    scheduledTaskService.registerTask(msg.getId(), future);
                 }
                 else {
-                    taskScheduler.schedule(() -> {
+                    future = taskScheduler.schedule(() -> {
                         try {
                             notificationSendService.sendNotification(msg);
                         } catch (FirebaseMessagingException e) {
                             throw new RuntimeException(e);
                         }
                     }, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    scheduledTaskService.registerTask(msg.getId(), future);
                 }
             });
         }
@@ -173,9 +178,18 @@ public class NotificationService {
                 .map(Schedule::getId)
                 .distinct()
                 .toList();
+
+        List<Long> notificationIdList = scheduleIdList.stream()
+                .flatMap(scheduleId -> notificationRepository.findByScheduleId(scheduleId).stream())
+                .map(Notification::getId)
+                .toList();
+
+        notificationIdList.forEach(scheduledTaskService::cancelTask);
         scheduleIdList.forEach(notificationRepository::deleteByScheduleId);
     }
     
+
+
 
 
     @Transactional
