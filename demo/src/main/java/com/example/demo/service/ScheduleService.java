@@ -16,6 +16,7 @@ import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.RecurringScheduleRepository;
 import com.example.demo.repository.ScheduleRepository;
 import com.example.demo.repository.UserRepository;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class ScheduleService {
     private final RecurringScheduleRepository recurringScheduleRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final CaregiverNotificationService caregiverNotificationService;
 
     @Transactional
     public void saveRecurring(RecurringScheduleRequest request) {
@@ -207,6 +209,12 @@ public class ScheduleService {
 
         schedule.setCompleted(true);
         scheduleRepository.save(schedule);
+
+        try {
+            caregiverNotificationService.notifyScheduleCompleted(scheduleId);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void existsProtectedUserId(Long protectedUserId) {

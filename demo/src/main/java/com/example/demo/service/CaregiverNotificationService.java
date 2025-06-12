@@ -71,7 +71,24 @@ public class CaregiverNotificationService {
         return caregiverTokens;
     }
 
-    // 2. 약 복용 일정 미완료 알림: 설정된 시간 10분 후에 전송(해당 보호자 기기)
+    // 2. 약 복용 일정 완료 알림: 피보호자가 일정 완료 누르면 전송(해당 보호자 기기)
+    public void notifyScheduleCompleted(Long scheduleId) throws FirebaseMessagingException {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFoundException("해당 일정이 존재하지 않습니다."));
+
+        User protectedUser = userRepository.findById(schedule.getProtectedUserId())
+                .orElseThrow(() -> new UserNotFoundException("해당 사용자가 존재하지 않습니다."));
+
+        List<String> caregiverTokens = getCaregiverTokens(schedule.getProtectedUserId());
+
+        String msgTitle = schedule.getTitle() + " 복용 알림";
+        String body = String.format("%s님이 오늘 %s을(를) 복용하셨습니다.",
+                protectedUser.getName(), schedule.getTitle());
+
+        notificationSendService.sendHealthStatusCompletedNotifications(caregiverTokens, msgTitle, body);
+    }
+
+    // 3. 약 복용 일정 미완료 알림: 설정된 시간 10분 후에 전송(해당 보호자 기기)
     @Transactional
     public void saveMissedScheduleNotifications(Schedule schedule) {
         Long ProtectedUserId = schedule.getProtectedUserId();
