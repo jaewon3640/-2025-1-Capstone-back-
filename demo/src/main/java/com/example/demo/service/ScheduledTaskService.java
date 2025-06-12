@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -17,7 +16,6 @@ public class ScheduledTaskService {
 
     public void registerTask(Long notificationId, ScheduledFuture<?> future) {
         scheduledTasks.put(notificationId, future);
-        printScheduledTasks();
     }
 
     public void cancelTask(Long notificationId) {
@@ -25,13 +23,10 @@ public class ScheduledTaskService {
         if (future != null) {
             future.cancel(false);
         }
-        printScheduledTasks();
     }
 
     private void printScheduledTasks() {
         Set<Long> keys = scheduledTasks.keySet();
-        log.info("scheduledTasks: {}", keys.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(" ")));
+        log.info("scheduledTasks: {}", keys);
     }
 }
